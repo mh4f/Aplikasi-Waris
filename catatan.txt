@@ -1,0 +1,54 @@
+Pembagian Warisan :
+
+ Anggota 'Ashabah :
+  1.  Anak Laki-Laki *
+  2.  Cucu Laki-Laki dari Anak Laki-Laki
+  3.  Ayah *
+  4.  Kakek *
+  5.  Saudara Laki-Laki Sekandung *
+  6.  Saudara Laki-laki Sebapak *
+  7.  Anak dari Saudara Laki-Laki Sekandung
+  8.  Anak dari Saudara Laki-Laki Sebapak
+  9.  Paman Sekandung *
+  10. Paman Sebapak *
+  11. Anak Paman Sekandung *
+  12. Anak Paman Sebapak *
+  13. Orang Yang Memerdekakan Budak
+
+ Ashabul Furudh :
+  1.  Ayah *
+        - 1/6 Jika ada anak / cucu laki-laki
+        - 1/6 + 'A Jika ada anak / cucu perempuan dan tidak ada anak & cucu laki-laki
+        - 'Ashabah Jika tidak ada anak & cucu
+  2.  Kakek *
+        - 1/6 Jika ada anak / cucu laki-laki dan tidak ada ayah
+        - 1/6 + 'A Jika ada anak / cucu perempuan dan tidak ada anak & cucu laki-laki & ayah
+        - 'Ashabah Jika tidak ada anak & cucu & ayah
+        - Terhalang Jika ada Ayah
+  3.  Anak Perempuan *
+        - 1/2 Jika sendiri dan tidak ada Anak Laki-laki
+        - 2/3 Jika lebih dari 1 dan tidak ada anak laki-laki
+        - 'Ashabah bersama Anak Laki-Laki Jika ada
+  4.  Cucu Perempuan dari Anak Laki-Laki *
+        - 1/2 Jika sendiri dan tidak ada Anak Laki-laki & Anak Perempuan
+        - 2/3 Jika lebih dari 1 dan tidak ada anak laki-laki & Anak Perempuan
+        - 1/6 Jika ada 1 Anak Perempuan dan tidak ada Anak Laki-Laki
+        - 'Ashabah bersama Cucu laki-laki dari Anak Laki-Laki Jika ada dan tidak ada anak Laki-Laki & tidak lebih dari 1 Anak Perempuan
+        - Terhalang Jika ada Anak Laki-Laki / Lebih dari 1 Anak Perempuan
+  5.  Ibu *
+        - 1/3 Jika tidak ada Anak & Cucu & lebih dari 1 Saudara/i & Suami / Istri
+        - 1/6 Jika ada Anak / Cucu / lebih dari 1 Saudara/i
+        - 1/3 -> 'Ashabah Jika ada Suami / Istri dan tidak ada Anak & Cucu & lebih dari 1 Saudara/i 
+  6.  Nenek *
+        - 1/6 Jika tidak ada Ibu
+        - Terhalang Jika ada Ibu
+  7.  Suami *
+        - 1/2 Jika tidak ada Anak & Cucu
+        - 1/4 Jika ada Anak / Cucu
+  8.  Istri *
+        - 1/4 Jika tidak ada Anak & Cucu
+        - 1/8 Jika ada Anak / Cucu
+  9.  Saudara Laki-Laki Seibu *
+  10  Saudari Sekandung *
+  11. Saudari Sebapak *
+  12. Saudari Seibu *
