@@ -205,10 +205,7 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
             }
         }
 
-        // Function Jumlah Saudara & Pasangan
-        function jumlahSaudara() {
-            return saudarak + saudarab + saudarai + saudarik + saudarib + saudarii;
-        }
+        // Function Pasangan
 
         function Pasangan() {
             if (kelamin == "laki") {
@@ -221,29 +218,9 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
         }
 
         const pasangan = Pasangan();
-        const jumlahsaudara = jumlahSaudara();
         const bersih = hartaBersih();
 
         // Function pembagian waris
-        function bagianAnakLk() {
-            if (anakpr == 0) {
-                return "sisa";
-            } else {
-                return "sisa bareng";
-            }
-        }
-
-        function bagianCucuLkLk() {
-            if (anaklk == 0) {
-                if (cucuprlk == 0) {
-                    return "sisa";
-                } else {
-                    return "sisa bareng";
-                }
-            } else {
-                return 0;
-            }
-        }
 
         function bagianAnakPr() {
             if ((anakpr) => 0) {
@@ -314,34 +291,6 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
             }
         }
 
-        // function bagianBapak() {
-        //     if (anaklk == 0 && cuculklk == 0) {
-        //         if (anakpr == 0 && cucuprlk == 0) {
-        //             return "sisa";
-        //         } else {
-        //             return harta / 6 + "sisa";
-        //         }
-        //     } else {
-        //         return harta / 6;
-        //     }
-        // }
-
-        // function bagianKakek() {
-        //     if (bapak == 0) {
-        //         if (anaklk == 0 && cuculklk == 0) {
-        //             if (anakpr == 0 && cucuprlk == 0) {
-        //                 return "sisa";
-        //             } else {
-        //                 return harta / 6 + "sisa";
-        //             }
-        //         } else {
-        //             return harta / 6;
-        //         }
-        //     } else {
-        //         return 0;
-        //     }
-        // }
-
         function bagianPasangan() {
             if (pasangan == "suami") {
                 if (suami != 0) {
@@ -368,50 +317,54 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
 
         // End Function pembagian waris
 
-        let bal = bagianAnakLk();
+        let bal; // Bagian Anak Laki-Laki
         let bap = bagianAnakPr();
-        let bcl = bagianCucuLkLk();
-        let bcp = bagianCucuPrLk();
         let bp = bagianPasangan();
         let bi = bagianIbu();
         let bbk = bagianBapakKakek();
-        let bb;
+        let bb; // Bagian Bapak
+
+        let bcl; // Bagian Cucu Laki-Laki dari Anak Laki-Laki
+        let bcp = bagianCucuPrLk();
         let bn = bagianNenek();
-        let bk;
+        let bk = 0; // Bagian Kakek
+
+        let bsik = 0; // Bagian Saudara Kandung
+        let bsib = 0; // Bagian Saudara Sebapak
+        let bsak = 0; // Bagian Saudari Kandung
+        let bsab = 0; // Bagian Saudari Sebapak
+
+        let bask = 0; // Bagian Anak Saudara Kandung
+        let basb = 0; // Bagian Anak Saudara Sebapak
+
+        let bpk = 0; // Bagian Paman Kandung
+        let bpb = 0; // Bagian Paman Sebapak
+
+        let bapk = 0; // Bagian Anak Paman Kandung
+        let bapb = 0; // Bagian Anak Paman Sebapak
 
         // Function Perhitungan Akhir
-        function Warisan() {
+        function Furudh() {
             let hartaReal = bersih;
-            if (!bal) {
-                if (!bp) {
-                    if (!bap) {
-                        hartaReal = hartaReal - bi - bn;
-                        bbk = hartaReal;
-                    } else {
-                        hartaReal = hartaReal - bersih / 6 - bi - bap - bn;
-                        bbk = hartaReal + bersih / 6;
-                    }
+            if (!bp) {
+                if (!bap) {
+                    hartaReal = hartaReal - bi - bn - bcp;
+                    bbk = hartaReal;
                 } else {
-                    if (!bap) {
-                        hartaReal = hartaReal - bp - bn;
-                        if (ibu) {
-                            bi = hartaReal / 3;
-                            hartaReal = hartaReal - bi;
-                        }
-                        bbk = hartaReal;
-                    } else {
-                        hartaReal = hartaReal - bersih / 6 - bi - bap - bn;
-                        bbk = hartaReal + bersih / 6;
-                    }
+                    hartaReal = hartaReal - bersih / 6 - bi - bap - bn - bcp;
+                    bbk = hartaReal + bersih / 6;
                 }
             } else {
-                hartaReal = hartaReal - bbk - bi;
                 if (!bap) {
-                    bal = hartaReal / anaklk;
+                    hartaReal = hartaReal - bp - bn - bcp;
+                    if (ibu) {
+                        bi = hartaReal / 3;
+                        hartaReal = hartaReal - bi;
+                    }
+                    bbk = hartaReal;
                 } else {
-                    hartaReal = hartaReal / (anaklk * 2 + anakpr);
-                    bal = (hartaReal * 2) / anaklk;
-                    bap = hartaReal / anakpr;
+                    hartaReal = hartaReal - bersih / 6 - bi - bap - bn;
+                    bbk = hartaReal + bersih / 6;
                 }
             }
             if (bapak) {
@@ -424,8 +377,91 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
             if (bn) {
                 bn = bn / nenek;
             }
+            return hartaReal;
         }
-        Warisan();
+
+        function Ashabah(sisa) {
+            let bagiansisa;
+            if (anaklk > 0) {
+                if (anakpr > 0) {
+                    bagiansisa = sisa / (anaklk * 2) + anakpr;
+                    bal = bagiansisa * 2;
+                    bap = bagiansisa;
+                } else {
+                    bagiansisa = sisa / anaklk;
+                    bal = bagiansisa;
+                }
+            } else {
+                if (cuculklk > 0) {
+                    if (cucuprlk > 0) {
+                        bagiansisa = sisa / (cuculklk * 2) + cucuprlk;
+                        bcl = bagiansisa * 2;
+                        bcp = bagiansisa;
+                    } else {
+                        bagiansisa = sisa / cuculklk;
+                        bcl = bagiansisa;
+                    }
+                } else {
+                    if (bapak) {
+                        bagiansisa = sisa;
+                        bp = bagiansisa;
+                    } else {
+                        if (kakek > 0) {
+                            bagiansisa = sisa / kakek;
+                            bk = bagiansisa;
+                        } else {
+                            if (saudarak > 0) {
+                                if (saudarik > 0) {
+                                    bagiansisa = sisa / (saudarak * 2) + saudarik;
+                                    bsik = bagiansisa * 2;
+                                    bsak = bagiansisa;
+                                } else {
+                                    bagiansisa = sisa / saudarak;
+                                    bsik = bagiansisa;
+                                }
+                            } else {
+                                if (saudarab) {
+                                    if (saudarib > 0) {
+                                        bagiansisa = sisa / (saudarab * 2) + saudarib;
+                                        bsib = bagiansisa * 2;
+                                        bsab = bagiansisa;
+                                    } else {
+                                        bagiansisa = sisa / saudarab;
+                                        bsib = bagiansisa;
+                                    }
+                                } else {
+                                    if (anaksaudarak) {
+                                        bask = sisa / anaksaudarak;
+                                    } else {
+                                        if (anaksaudarab) {
+                                            basb = sisa / anaksaudarab;
+                                        } else {
+                                            if (pamank) {
+                                                bpk = sisa / pamank;
+                                            } else {
+                                                if (pamanb) {
+                                                    bpb = sisa / pamanb;
+                                                } else {
+                                                    if (anakpamank) {
+                                                        bapk = sisa / anakpamank;
+                                                    } else {
+                                                        if (anakpamanb) {
+                                                            bapb = sisa / anakpamanb;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        const sisa = Furudh();
+        Ashabah(sisa);
 
         hadua.innerHTML = "Bagian Waris";
         formwaris.innerHTML = `
@@ -436,7 +472,7 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
             <h5>Bagian 1 Anak Perempuan ${bap}</h5>
         </div>
         <div class="mb-3">
-            <h5>Bagian Pasangan ${bp}</h5>
+            <h5>Bagian ${pasangan} ${bp}</h5>
         </div>
         <div class="mb-3">
             <h5>Bagian Bapak ${bb}</h5>
@@ -444,10 +480,42 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
         <div class="mb-3">
             <h5>Bagian Ibu ${bi}</h5>
         </div>
+        <div class="mb-3">
+            <h5>Bagian Kakek ${bk}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Nenek ${bn}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Cucu Laki-Laki dar Anak Laki-Laki ${bcl}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Cucu Perempuan dari Anak Laki-Laki ${bcp}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Saudara Laki-Laki Sekandung ${bsik}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Saudara Laki-Laki Sebapak ${bsib}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Anak Saudara Laki-Laki Sekandung ${bask}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Anak Saudara Laki-Laki Sebapak ${basb}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Paman Sekandung ${bpk}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Paman Sebapak ${bpb}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Anak Paman Sekandung ${bapk}</h5>
+        </div>
+        <div class="mb-3">
+            <h5>Bagian Anak Paman Sebapak ${bapb}</h5>
+        </div>
     `;
     });
-
-    // Example calculation (simplified)
-    // const bagianPerWaris = harta / jumlahAhliWaris;
-    // alert(`Setiap ahli waris akan mendapatkan bagian sebesar: Rp${bagianPerWaris.toFixed(2)}`);
 });
