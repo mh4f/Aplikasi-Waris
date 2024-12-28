@@ -205,7 +205,10 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
             }
         }
 
-        // Function Pasangan
+        // Function Jumlah Saudara & Pasangan
+        function jumlahSaudara() {
+            return saudarak + saudarab + saudarai + saudarik + saudarib + saudarii;
+        }
 
         function Pasangan() {
             if (kelamin == "laki") {
@@ -218,9 +221,29 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
         }
 
         const pasangan = Pasangan();
+        const jumlahsaudara = jumlahSaudara();
         const bersih = hartaBersih();
 
         // Function pembagian waris
+        function bagianAnakLk() {
+            if (anakpr == 0) {
+                return "sisa";
+            } else {
+                return "sisa bareng";
+            }
+        }
+
+        function bagianCucuLkLk() {
+            if (anaklk == 0) {
+                if (cucuprlk == 0) {
+                    return "sisa";
+                } else {
+                    return "sisa bareng";
+                }
+            } else {
+                return 0;
+            }
+        }
 
         function bagianAnakPr() {
             if ((anakpr) => 0) {
