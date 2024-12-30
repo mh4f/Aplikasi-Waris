@@ -149,24 +149,24 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
     formwaris.addEventListener("submit", function (event) {
         // Ketika Di Kirim
 
-        // Function Mengembil Element Dengan id
         const value = (id) => {
-            const selectedElement = document.getElementById(id);
-            const selectedValue = selectedElement.value;
-            return selectedValue;
+            return parseInt(document.getElementById(id).value);
+        };
+        const nilai = (id) => {
+            return document.getElementById(id).value;
         };
 
         // Mengambil Nilai-Nilai Ahli Waris Yang Dibutuhkan
         const anaklk = value("anaklk");
         const anakpr = value("anakpr");
-        const bapak = value("bapak");
-        const ibu = value("ibu");
-        const suami = value("suami");
+        const bapak = nilai("bapak");
+        const ibu = nilai("ibu");
+        const suami = nilai("suami");
         const istri = value("istri");
         const kakek = value("kakek");
         const nenek = value("nenek");
-        const cucuprlk = value("cucuprlk");
         const cuculklk = value("cuculklk");
+        const cucuprlk = value("cucuprlk");
         const saudarak = value("saudarak");
         const saudarab = value("saudarab");
         const saudarai = value("saudarai");
@@ -181,77 +181,39 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
         const anakpamanb = value("anakpamanb");
 
         // Function Membersihkan Harta Waris ( Menunaikan Kewajiban sebelum membagikan harta waris )
-        function hartaBersih() {
-            if (hutang == 0 || !hutang) {
-                if (wasiat) {
-                    if (wasiat > harta / 3) {
-                        return harta - harta / 3;
-                    } else {
-                        return harta - wasiat;
-                    }
-                } else {
-                    return harta;
-                }
-            } else {
-                if (wasiat) {
-                    if (wasiat > harta / 3) {
-                        return harta - hutang - harta / 3;
-                    } else {
-                        return harta - hutang - wasiat;
-                    }
-                } else {
-                    return harta - hutang;
-                }
-            }
-        }
-
-        // Function Jumlah Saudara & Pasangan
-        function jumlahSaudara() {
-            return saudarak + saudarab + saudarai + saudarik + saudarib + saudarii;
+        function hartaBersih(harta, wasiat, hutang) {
+            const maxWasiat = harta / 3;
+            wasiat = wasiat > maxWasiat ? maxWasiat : wasiat;
+            return harta - (hutang || 0) - (wasiat || 0);
         }
 
         function Pasangan() {
             if (kelamin == "laki") {
-                const pasangan = "istri";
+                const pasangan = "Istri";
                 return pasangan;
             } else {
-                const pasangan = "suami";
+                const pasangan = "Suami";
                 return pasangan;
             }
+        }
+
+        function JumlahSaudara() {
+            return saudarak + saudarab + saudarai + saudarik + saudarib + saudarii;
         }
 
         const pasangan = Pasangan();
-        const jumlahsaudara = jumlahSaudara();
-        const bersih = hartaBersih();
+        const jumlahsaudara = JumlahSaudara();
+        const bersih = hartaBersih(harta, wasiat, hutang);
 
         // Function pembagian waris
-        function bagianAnakLk() {
-            if (anakpr == 0) {
-                return "sisa";
-            } else {
-                return "sisa bareng";
-            }
-        }
-
-        function bagianCucuLkLk() {
-            if (anaklk == 0) {
-                if (cucuprlk == 0) {
-                    return "sisa";
-                } else {
-                    return "sisa bareng";
-                }
-            } else {
-                return 0;
-            }
-        }
 
         function bagianAnakPr() {
-            if ((anakpr) => 0) {
+            if (anakpr > 0) {
                 if (anaklk <= 0) {
                     if (anakpr == 1) {
-                        return harta / 2;
+                        return bersih / 2;
                     } else {
-                        return ((harta / 3) * 2) / anakpr;
+                        return ((bersih / 3) * 2) / anakpr;
                     }
                 } else {
                     return "sisa bareng";
@@ -262,16 +224,15 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
         }
 
         function bagianCucuPrLk() {
-            if ((cucuprlk) => 1 && anaklk == 0 && anakpr <= 1) {
+            if (cucuprlk >= 1 && anaklk == 0 && anakpr <= 1) {
                 if (cuculklk <= 0) {
                     if (anakpr == 1) {
-                        return harta / 6 / cucuprlk;
-                    } else if (anakpr == 0);
-                    {
+                        return bersih / 6 / cucuprlk;
+                    } else if (anakpr == 0) {
                         if (cucuprlk == 1) {
-                            return harta / 2;
+                            return bersih / 2;
                         } else {
-                            return ((harta / 3) * 2) / cucuprlk;
+                            return ((bersih / 3) * 2) / cucuprlk;
                         }
                     }
                 } else {
@@ -283,262 +244,231 @@ document.getElementById("formwaris").addEventListener("submit", function (event)
         }
 
         function bagianIbu() {
-            if (anaklk == 0 && anakpr == 0 && cuculklk == 0 && cucuprlk == 0 && jumlahsaudara > 1) {
-                if (suami == 0 && istri == 0) {
-                    return harta / 3;
+            if (ibu) {
+                if (anaklk == 0 && anakpr == 0 && cuculklk == 0 && cucuprlk == 0 && jumlahsaudara <= 1) {
+                    if (!suami && (istri <= 0 || !istri)) {
+                        return bersih / 3;
+                    } else {
+                        return "1/3 dari sisa";
+                    }
                 } else {
-                    return "1/3 dari sisa";
+                    return bersih / 6;
                 }
             } else {
-                return harta / 6;
+                return 0;
             }
         }
 
         function bagianNenek() {
             if (ibu == 0) {
-                return harta / 6 / nenek;
+                return bersih / 6 / nenek;
             } else {
                 return 0;
             }
         }
 
         function bagianBapakKakek() {
-            if (anaklk == 0 && cuculklk == 0) {
-                if (anakpr == 0 && cucuprlk == 0) {
-                    return "sisa";
-                } else {
-                    return "1/6 + sisa";
-                }
+            if (!bapak && !kakek) {
+                return 0;
             } else {
-                return harta / 6;
+                if (anaklk == 0 && cuculklk == 0) {
+                    if (anakpr == 0 && cucuprlk == 0) {
+                        return "sisa";
+                    } else {
+                        return "1/6 + sisa";
+                    }
+                } else {
+                    return bersih / 6;
+                }
             }
         }
 
         function bagianPasangan() {
-            if (pasangan == "suami") {
-                if (suami != 0) {
-                    if (anaklk == 0 && anakpr == 0 && cuculklk == 0 && cucuprlk == 0) {
-                        return harta / 2;
-                    } else {
-                        return harta / 4;
-                    }
+            if (pasangan == "Suami") {
+                if (anaklk == 0 && anakpr == 0 && cuculklk == 0 && cucuprlk == 0) {
+                    return bersih / 2;
                 } else {
-                    return 0;
+                    return bersih / 4;
                 }
             } else {
-                if (istri != 0) {
-                    if (anaklk == 0 && anakpr == 0 && cuculklk == 0 && cucuprlk == 0) {
-                        return harta / 4 / istri;
-                    } else {
-                        return harta / 8 / istri;
-                    }
+                if (anaklk == 0 && anakpr == 0 && cuculklk == 0 && cucuprlk == 0) {
+                    return bersih / 4 / istri;
                 } else {
-                    return 0;
+                    return bersih / 8 / istri;
                 }
             }
         }
 
         // End Function pembagian waris
 
-        let bal; // Bagian Anak Laki-Laki
-        let bap = bagianAnakPr();
-        let bp = bagianPasangan();
-        let bi = bagianIbu();
-        let bbk = bagianBapakKakek();
-        let bb; // Bagian Bapak
+        let bagiananaklaki; // Bagian Anak Laki-Laki
+        let bagiananakpr = bagianAnakPr();
+        let bagianpasangan = bagianPasangan();
+        let bagianibu = bagianIbu();
+        let bagianbapakkakek = bagianBapakKakek();
+        let bagianbapak = 0; // Bagian Bapak
 
-        let bcl; // Bagian Cucu Laki-Laki dari Anak Laki-Laki
-        let bcp = bagianCucuPrLk();
-        let bn = bagianNenek();
-        let bk = 0; // Bagian Kakek
+        let bagiancuculk = 0; // Bagian Cucu Laki-Laki dari Anak Laki-Laki
+        let bagiancucupr = bagianCucuPrLk();
+        let bagiannenek = bagianNenek();
+        let bagiankakek = 0; // Bagian Kakek
 
-        let bsik = 0; // Bagian Saudara Kandung
-        let bsib = 0; // Bagian Saudara Sebapak
-        let bsak = 0; // Bagian Saudari Kandung
-        let bsab = 0; // Bagian Saudari Sebapak
+        let bagiansaudarak = 0; // Bagian Saudara Kandung
+        let bagiansaudarab = 0; // Bagian Saudara Sebapak
+        let bagiansaudarik = 0; // Bagian Saudari Kandung
+        let bagiansaudarib = 0; // Bagian Saudari Sebapak
 
-        let bask = 0; // Bagian Anak Saudara Kandung
-        let basb = 0; // Bagian Anak Saudara Sebapak
+        let bagiananaksaudarak = 0; // Bagian Anak Saudara Kandung
+        let bagiananaksaudarab = 0; // Bagian Anak Saudara Sebapak
 
-        let bpk = 0; // Bagian Paman Kandung
-        let bpb = 0; // Bagian Paman Sebapak
+        let bagianpamank = 0; // Bagian Paman Kandung
+        let bagianpamanb = 0; // Bagian Paman Sebapak
 
-        let bapk = 0; // Bagian Anak Paman Kandung
-        let bapb = 0; // Bagian Anak Paman Sebapak
+        let bagiananakpamank = 0; // Bagian Anak Paman Kandung
+        let bagiananakpamanb = 0; // Bagian Anak Paman Sebapak
 
         // Function Perhitungan Akhir
-        function Furudh() {
-            let hartaReal = bersih;
-            if (!bp) {
-                if (!bap) {
-                    hartaReal = hartaReal - bi - bn - bcp;
-                    bbk = hartaReal;
-                } else {
-                    hartaReal = hartaReal - bersih / 6 - bi - bap - bn - bcp;
-                    bbk = hartaReal + bersih / 6;
-                }
-            } else {
-                if (!bap) {
-                    hartaReal = hartaReal - bp - bn - bcp;
-                    if (ibu) {
-                        bi = hartaReal / 3;
-                        hartaReal = hartaReal - bi;
-                    }
-                    bbk = hartaReal;
-                } else {
-                    hartaReal = hartaReal - bersih / 6 - bi - bap - bn;
-                    bbk = hartaReal + bersih / 6;
-                }
-            }
-            if (bapak) {
-                bb = bbk;
-                bk = 0;
-            } else {
-                bb = 0;
-                bk = bbk / kakek;
-            }
-            if (bn) {
-                bn = bn / nenek;
-            }
-            return hartaReal;
-        }
+        function Warisan() {
+            let sisa = bersih;
+            console.log(sisa);
+            sisa -= bagianpasangan;
+            console.log(sisa);
+            sisa -= bagiannenek;
+            console.log(sisa);
+            sisa -= bagianbapakkakek !== "sisa" ? bagianbapakkakek : 0;
+            console.log(sisa);
+            sisa -= bagiananakpr !== "sisa bareng" ? bagiananakpr : 0;
+            console.log(sisa);
+            sisa -= bagiancucupr !== "sisa bareng" ? bagiancucupr : 0;
+            console.log(sisa);
+            bagianibu = bagianibu != "1/3 dari sisa" ? bagianibu : sisa / 3;
+            sisa -= bagianibu;
+            console.log(sisa);
 
-        function Ashabah(sisa) {
-            let bagiansisa;
+            if (bapak) {
+                bagianbapak = bagianbapakkakek;
+                bagiankakek = 0;
+            } else {
+                bagiankakek = bagianbapakkakek;
+                bagianbapak = 0;
+            }
+
             if (anaklk > 0) {
                 if (anakpr > 0) {
-                    bagiansisa = sisa / (anaklk * 2) + anakpr;
-                    bal = bagiansisa * 2;
-                    bap = bagiansisa;
+                    sisa /= anaklk * 2 + anakpr;
+                    bagiananaklaki = sisa * 2;
+                    bagiananakpr = sisa;
                 } else {
-                    bagiansisa = sisa / anaklk;
-                    bal = bagiansisa;
+                    bagiananaklaki = sisa / anaklk;
                 }
             } else {
                 if (cuculklk > 0) {
                     if (cucuprlk > 0) {
-                        bagiansisa = sisa / (cuculklk * 2) + cucuprlk;
-                        bcl = bagiansisa * 2;
-                        bcp = bagiansisa;
+                        sisa /= anaklk * 2 + cucuprlk;
+                        bagiancuculk = sisa * 2;
+                        bagiancucupr = sisa;
                     } else {
-                        bagiansisa = sisa / cuculklk;
-                        bcl = bagiansisa;
+                        bagiancuculk = sisa / cuculklk;
                     }
                 } else {
                     if (bapak) {
-                        bagiansisa = sisa;
-                        bp = bagiansisa;
-                    } else {
-                        if (kakek > 0) {
-                            bagiansisa = sisa / kakek;
-                            bk = bagiansisa;
+                        bagianbapak = sisa;
+                    } else if (kakek > 0) {
+                        bagiankakek = sisa / kakek;
+                    } else if (saudarak > 0) {
+                        if (saudarik > 0) {
+                            sisa = sisa / (saudarak * 2) + saudarik;
+                            bagiansaudarak = sisa * 2;
+                            bagiansaudarik = sisa;
                         } else {
-                            if (saudarak > 0) {
-                                if (saudarik > 0) {
-                                    bagiansisa = sisa / (saudarak * 2) + saudarik;
-                                    bsik = bagiansisa * 2;
-                                    bsak = bagiansisa;
-                                } else {
-                                    bagiansisa = sisa / saudarak;
-                                    bsik = bagiansisa;
-                                }
-                            } else {
-                                if (saudarab) {
-                                    if (saudarib > 0) {
-                                        bagiansisa = sisa / (saudarab * 2) + saudarib;
-                                        bsib = bagiansisa * 2;
-                                        bsab = bagiansisa;
-                                    } else {
-                                        bagiansisa = sisa / saudarab;
-                                        bsib = bagiansisa;
-                                    }
-                                } else {
-                                    if (anaksaudarak) {
-                                        bask = sisa / anaksaudarak;
-                                    } else {
-                                        if (anaksaudarab) {
-                                            basb = sisa / anaksaudarab;
-                                        } else {
-                                            if (pamank) {
-                                                bpk = sisa / pamank;
-                                            } else {
-                                                if (pamanb) {
-                                                    bpb = sisa / pamanb;
-                                                } else {
-                                                    if (anakpamank) {
-                                                        bapk = sisa / anakpamank;
-                                                    } else {
-                                                        if (anakpamanb) {
-                                                            bapb = sisa / anakpamanb;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            sisa /= saudarak;
                         }
+                    } else if (saudarab > 0) {
+                        if (saudarib > 0) {
+                            sisa = sisa / (saudarab * 2) + saudarib;
+                            bagiansaudarab = sisa * 2;
+                            bagiansaudarib = sisa;
+                        } else {
+                            sisa /= saudarab;
+                        }
+                    } else if (anaksaudarak) {
+                        bagiananaksaudarak = sisa / anaksaudarak;
+                    } else if (anaksaudarab) {
+                        bagiananaksaudarab = sisa / anaksaudarab;
+                    } else if (pamank) {
+                        bagianpamank = sisa / pamank;
+                    } else if (pamanb) {
+                        bagianpamanb = sisa / pamanb;
+                    } else if (anakpamank) {
+                        bagiananakpamank = sisa / anakpamank;
+                    } else if (anakpamanb) {
+                        bagiananakpamanb = sisa / anakpamanb;
                     }
                 }
             }
+            console.log(sisa);
         }
-        const sisa = Furudh();
-        Ashabah(sisa);
+        Warisan();
 
         hadua.innerHTML = "Bagian Waris";
         formwaris.innerHTML = `
-        <div class="mb-3">
-            <h5>Bagian 1 Anak Laki-Laki ${bal}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian 1 Anak Perempuan ${bap}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian ${pasangan} ${bp}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Bapak ${bb}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Ibu ${bi}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Kakek ${bk}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Nenek ${bn}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Cucu Laki-Laki dar Anak Laki-Laki ${bcl}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Cucu Perempuan dari Anak Laki-Laki ${bcp}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Saudara Laki-Laki Sekandung ${bsik}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Saudara Laki-Laki Sebapak ${bsib}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Anak Saudara Laki-Laki Sekandung ${bask}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Anak Saudara Laki-Laki Sebapak ${basb}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Paman Sekandung ${bpk}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Paman Sebapak ${bpb}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Anak Paman Sekandung ${bapk}</h5>
-        </div>
-        <div class="mb-3">
-            <h5>Bagian Anak Paman Sebapak ${bapb}</h5>
-        </div>
-    `;
+            <div class="mb-3">
+                <h5>Bagian 1 Anak Laki-Laki ${bagiananaklaki}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian 1 Anak Perempuan ${bagiananakpr}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian ${pasangan} ${bagianpasangan}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Bapak ${bagianbapak}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Ibu ${bagianibu}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Kakek ${bagiankakek}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Nenek ${bagiannenek}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Cucu Laki-Laki dar Anak Laki-Laki ${bagiancuculk}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Cucu Perempuan dari Anak Laki-Laki ${bagiancucupr}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Saudara Laki-Laki Sekandung ${bagiansaudarak}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Saudara Laki-Laki Sebapak ${bagiansaudarab}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Anak Saudara Laki-Laki Sekandung ${bagiananaksaudarak}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Anak Saudara Laki-Laki Sebapak ${bagiananaksaudarab}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Saudari Sekandung ${bagiansaudarik}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Saudari Sebapak ${bagiansaudarib}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Paman Sekandung ${bagianpamank}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Paman Sebapak ${bagianpamanb}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Anak Paman Sekandung ${bagiananakpamank}</h5>
+            </div>
+            <div class="mb-3">
+                <h5>Bagian Anak Paman Sebapak ${bagiananakpamanb}</h5>
+            </div>
+        `;
     });
 });
