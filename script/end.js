@@ -14,7 +14,6 @@ export function Warisan(
     cuculklk,
     cucuprlk,
     bagiancuculk,
-    bagiancucupr,
     bapak,
     saudarak,
     saudarik,
