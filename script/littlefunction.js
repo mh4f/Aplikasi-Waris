@@ -21,6 +21,6 @@ export const nilai = (id) => {
     return document.getElementById(id).value;
 };
 
-function JumlahSaudara(saudarak, saudarab, saudarai, saudarik, saudarib, saudarii) {
+export function JumlahSaudara(saudarak, saudarab, saudarai, saudarik, saudarib, saudarii) {
     return saudarak + saudarab + saudarai + saudarik + saudarib + saudarii;
 }
