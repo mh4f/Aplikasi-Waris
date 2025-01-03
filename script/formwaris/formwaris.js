@@ -118,3 +118,51 @@ export const form = `
         <div class="d-grid gap-2">
             <button type="submit" class="btn btn-primary">Kirim</button>
         </div>`;
+
+export const formwarisan = {
+    anakpr: `
+    <div class="mb-3">
+        <label for="anakpr" class="form-label">Jumlah Anak Perempuan</label>
+        <input type="number" class="form-control" id="anakpr" placeholder="Masukkan jumlah Anak Perempuan" />
+    </div>
+
+    <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">Lanjut</button>
+    </div>`,
+
+    ceklist: `
+<div class="mb-3">
+    <label for="check" class="form-label">Dari 3 Ahli Waris Berikut Pilih Yang Masih Ada</label>
+    <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+        <input type="checkbox" class="btn-check" id="bapak" autocomplete="off">
+        <label class="btn btn-outline-primary" for="bapak">Bapak</label>
+
+        <input type="checkbox" class="btn-check" id="ibu" autocomplete="off">
+        <label class="btn btn-outline-primary" for="ibu">Ibu</label>
+
+        <input type="checkbox" class="btn-check" id="suami" autocomplete="off">
+        <label class="btn btn-outline-primary" for="suami">Suami</label>
+    </div>
+</div>
+
+<div class="d-grid gap-2">
+    <button type="submit" class="btn btn-primary">Lanjut</button>
+</div>`,
+
+    istri: `
+<label for="anakpr" class="form-label">Jumlah Anak Perempuan</label>
+<div class="mb-3">
+    <select class="form-select" aria-label="Istri" id="istri" required>
+        <option selected>Jumlah Istri</option>
+        <option value="0">Tidak Ada</option>
+        <option value="1">Satu / Eka / One</option>
+        <option value="2">Dua / Dwi / Two</option>
+        <option value="3">Tiga / Tri / Three</option>
+        <option value="4">Empat / Tetra / Four</option>
+    </select>
+</div>
+
+<div class="d-grid gap-2">
+     <button type="submit" class="btn btn-primary">Lanjut</button>
+</div>`,
+};

@@ -1,11 +1,11 @@
-export function Pasangan(kelamin) {
-    if (kelamin == "laki") {
-        const pasangan = "Istri";
-        return pasangan;
-    } else {
-        const pasangan = "Suami";
-        return pasangan;
+function parseBoolean(value) {
+    if (typeof value === "boolean") {
+        return value;
     }
+}
+
+export function Pasangan(kelamin) {
+    return kelamin == "laki" ? "Istri" : "Suami";
 }
 
 export function hartaBersih(harta, wasiat, hutang) {
@@ -17,8 +17,13 @@ export function hartaBersih(harta, wasiat, hutang) {
 export const value = (id) => {
     return parseInt(document.getElementById(id).value);
 };
+
 export const nilai = (id) => {
-    return document.getElementById(id).value;
+    return parseBoolean(document.getElementById(id).value);
+};
+
+export const element = (id) => {
+    return document.getElementById(id);
 };
 
 export function JumlahSaudara(saudarak, saudarab, saudarai, saudarik, saudarib, saudarii) {
